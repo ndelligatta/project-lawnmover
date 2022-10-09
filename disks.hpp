@@ -190,9 +190,3 @@ sorted_disks sort_lawnmower(const disk_state& before) {
   }
   return sorted_disks(disk_state(state), numOfSwap);
 }
-
-// int main() {
-//   disk_state issa(3);
-  
-//   return 0;
-// }
