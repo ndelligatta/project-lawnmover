@@ -21,6 +21,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
+#include <math.h>
 
 enum disk_color { DISK_LIGHT, DISK_DARK};
 
@@ -155,30 +156,31 @@ public:
 // Algorithm that sorts disks using the alternate algorithm.
 sorted_disks sort_alternate(const disk_state& before) {
 	int numOfSwap = 0;                                                                      //record # of step swap
- 
-          }
-
+  auto state = before;
   return sorted_disks(disk_state(state), numOfSwap);
 }
 
 
 // Algorithm that sorts disks using the lawnmower algorithm.
 sorted_disks sort_lawnmower(const disk_state& before) {
+  bool swapped;
   int numOfSwap = 0;
   int rounds = 0;
   disk_state state = before;
   while(rounds < ceil(state.total_count() / 2)) {
+    swapped = false;
     for(int i = 0; i < state.total_count(); i++) {
       if(state.is_index(i + 1)) {
-        if(state.get(i) < state.get(i + 1)) {
+        if(state.get(i) > state.get(i + 1)) {
           state.swap(i);
+          swapped = true;
           numOfSwap++;
         }
       }
     }
     for(int j = state.total_count(); j < 0; j--) {
       if(state.is_index(j - 1)) {
-        if(state.get(j - 1) < state.get(j)) {
+        if(state.get(j - 1) > state.get(j)) {
           state.swap(j-1);
           numOfSwap++;
         }
@@ -188,3 +190,9 @@ sorted_disks sort_lawnmower(const disk_state& before) {
   }
   return sorted_disks(disk_state(state), numOfSwap);
 }
+
+// int main() {
+//   disk_state issa(3);
+  
+//   return 0;
+// }
