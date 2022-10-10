@@ -155,30 +155,48 @@ public:
 
 // Algorithm that sorts disks using the alternate algorithm.
 sorted_disks sort_alternate(const disk_state& before) {
-	int numOfSwap = 0;                                                                      //record # of step swap
-  auto state = before;
+	bool oddFlag = false;
+  int start = 0;
+  int numOfSwap = 0;                                                                      //record # of step swap
+  disk_state state = before;
+  while(!state.is_sorted()) {
+    // Use oddFlag to switch start variable each run 
+    if(oddFlag) {
+      start = 1;
+    } else {
+      start = 0;
+    }
+    for(int i = start; i < state.total_count(); i += 2) {
+      // Ensure no out of bounds comparisons happening
+      if(state.is_index(i+1)) {
+        if(state.get(i) > state.get(i+1)) {
+          state.swap(i);
+          numOfSwap++;
+        }
+      }
+    }
+    oddFlag = !oddFlag;
+  }
   return sorted_disks(disk_state(state), numOfSwap);
 }
 
 
 // Algorithm that sorts disks using the lawnmower algorithm.
 sorted_disks sort_lawnmower(const disk_state& before) {
-  bool swapped;
   int numOfSwap = 0;
-  int rounds = 0;
   disk_state state = before;
-  while(rounds < ceil(state.total_count() / 2)) {
-    swapped = false;
+  while(!state.is_sorted()) {
     for(int i = 0; i < state.total_count(); i++) {
+      // Ensure no out of bounds comparisons happening
       if(state.is_index(i + 1)) {
         if(state.get(i) > state.get(i + 1)) {
           state.swap(i);
-          swapped = true;
           numOfSwap++;
         }
       }
     }
     for(int j = state.total_count(); j < 0; j--) {
+      // Ensure no out of bounds comparisons happening
       if(state.is_index(j - 1)) {
         if(state.get(j - 1) > state.get(j)) {
           state.swap(j-1);
@@ -186,7 +204,6 @@ sorted_disks sort_lawnmower(const disk_state& before) {
         }
       }
     }
-    rounds++;
   }
   return sorted_disks(disk_state(state), numOfSwap);
 }
